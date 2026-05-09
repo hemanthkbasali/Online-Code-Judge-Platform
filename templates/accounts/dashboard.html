@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | CodeSentinel{% endblock %}
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="profile-mini">
+            <div class="avatar">{{ user.initials }}</div>
+            <div>
+                <strong>{{ user.public_name }}</strong>
+                <span>{{ user.institution|default:"CodeSentinel Member" }}</span>
+            </div>
+        </div>
+        <nav class="side-nav">
+            <a class="active" href="{% url 'accounts:dashboard' %}"><i class="bi bi-grid"></i>Dashboard</a>
+            <a href="{% url 'problems:list' %}"><i class="bi bi-list-task"></i>Problems</a>
+            <a href="{% url 'submissions:history' %}"><i class="bi bi-clock-history"></i>Submissions</a>
+            {% if user.is_staff %}
+                <a href="{% url 'admin:index' %}"><i class="bi bi-sliders"></i>Admin</a>
+            {% endif %}
+        </nav>
+    </aside>
+    <section class="app-content">
+        <div class="content-top">
+            <div>
+                <span class="eyebrow">Your command center</span>
+                <h1>Dashboard</h1>
+            </div>
+            <a href="{% url 'problems:list' %}" class="btn btn-neon rounded-pill px-4">Solve Now</a>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6 col-xl-3">
+                <div class="metric-card">
+                    <span class="metric-label">Problems</span>
+                    <strong class="counter" data-target="{{ total_problems }}">0</strong>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="metric-card">
+                    <span class="metric-label">Solved</span>
+                    <strong class="counter" data-target="{{ solved_count }}">0</strong>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="metric-card">
+                    <span class="metric-label">Submissions</span>
+                    <strong class="counter" data-target="{{ total_submissions }}">0</strong>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="metric-card">
+                    <span class="metric-label">Accuracy</span>
+                    <strong><span class="counter" data-target="{{ accuracy }}">0</span>%</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-panel mt-4">
+            <div class="panel-heading">
+                <h2>Recent Submissions</h2>
+                <a href="{% url 'submissions:history' %}">View all</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table cs-table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Problem</th>
+                        <th>Language</th>
+                        <th>Verdict</th>
+                        <th>Time</th>
+                        <th>Submitted</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for submission in recent_submissions %}
+                        <tr>
+                            <td><a href="{{ submission.problem.get_absolute_url }}">{{ submission.problem.title }}</a></td>
+                            <td>{{ submission.get_language_display }}</td>
+                            <td><span class="verdict-badge {{ submission.verdict|slugify }}">{{ submission.verdict }}</span></td>
+                            <td>{{ submission.execution_time }}s</td>
+                            <td>{{ submission.created_at|date:"M d, H:i" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5" class="empty-row">No submissions yet. Pick a problem and send your first solution.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

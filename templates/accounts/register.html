@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Register | CodeSentinel{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card">
+        <div class="auth-heading">
+            <span class="brand-mark mx-auto">CS</span>
+            <h1>Create your account</h1>
+            <p>Join CodeSentinel and start solving multi-language challenges.</p>
+        </div>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% if field.name == "password1" or field.name == "password2" %}
+                        <div class="password-wrap">
+                            {{ field }}
+                            <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-neon w-100 py-2">Create Account</button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+    </div>
+</section>
+{% endblock %}

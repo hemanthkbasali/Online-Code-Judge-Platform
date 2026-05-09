@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}{{ problem.title }} | CodeSentinel{% endblock %}
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="problem-header">
+        <div>
+            <span class="difficulty-badge {{ problem.difficulty }}">{{ problem.get_difficulty_display }}</span>
+            <h1>{{ problem.title }}</h1>
+            <p>{{ problem.points }} points · {{ problem.time_limit }}s per testcase</p>
+        </div>
+        <a href="{% url 'problems:solve' problem.slug %}" class="btn btn-neon rounded-pill px-4">
+            <i class="bi bi-play-fill me-2"></i>Solve Problem
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <article class="statement-panel">
+                <h2>Description</h2>
+                <p>{{ problem.statement|linebreaksbr }}</p>
+
+                {% if problem.input_format %}
+                    <h2>Input Format</h2>
+                    <p>{{ problem.input_format|linebreaksbr }}</p>
+                {% endif %}
+
+                {% if problem.output_format %}
+                    <h2>Output Format</h2>
+                    <p>{{ problem.output_format|linebreaksbr }}</p>
+                {% endif %}
+
+                {% if problem.constraints %}
+                    <h2>Constraints</h2>
+                    <pre class="sample-box">{{ problem.constraints }}</pre>
+                {% endif %}
+
+                <h2>Sample Input</h2>
+                <pre class="sample-box">{{ problem.sample_input|default:"No sample input." }}</pre>
+                <h2>Sample Output</h2>
+                <pre class="sample-box">{{ problem.sample_output|default:"No sample output." }}</pre>
+            </article>
+        </div>
+        <div class="col-lg-4">
+            <div class="side-panel">
+                <h2>Public Test Cases</h2>
+                {% for case in visible_cases %}
+                    <div class="mini-case">
+                        <strong>Case {{ forloop.counter }}</strong>
+                        <span>Input</span>
+                        <pre>{{ case.input_data }}</pre>
+                        <span>Expected Output</span>
+                        <pre>{{ case.expected_output }}</pre>
+                    </div>
+                {% empty %}
+                    <p class="muted-text">Hidden cases are configured by the admin. Use the sample to test your first run.</p>
+                {% endfor %}
+            </div>
+
+            <div class="side-panel mt-4">
+                <h2>Your Recent Attempts</h2>
+                {% for submission in user_submissions %}
+                    <div class="attempt-row">
+                        <span class="verdict-badge {{ submission.verdict|slugify }}">{{ submission.verdict }}</span>
+                        <span>{{ submission.get_language_display }}</span>
+                        <small>{{ submission.created_at|date:"M d, H:i" }}</small>
+                    </div>
+                {% empty %}
+                    <p class="muted-text">No attempts for this problem yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

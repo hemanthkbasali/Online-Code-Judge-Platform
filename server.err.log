@@ -1,0 +1,17 @@
+Watching for file changes with StatReloader
+[09/May/2026 16:10:29] "GET / HTTP/1.1" 200 7659
+[09/May/2026 16:10:29,513] - Broken pipe from ('127.0.0.1', 54001)
+[09/May/2026 16:11:01] "GET / HTTP/1.1" 200 7655
+[09/May/2026 16:11:01,828] - Broken pipe from ('127.0.0.1', 54009)
+D:\Projects-own\Online Code Judge Platform\codesentinel\settings.py changed, reloading.
+Watching for file changes with StatReloader
+[09/May/2026 16:22:57] "GET / HTTP/1.1" 200 7655
+[09/May/2026 16:22:57] "GET /static/css/style.css HTTP/1.1" 200 17882
+[09/May/2026 16:22:57] "GET /static/js/main.js HTTP/1.1" 200 2022
+Not Found: /favicon.ico
+[09/May/2026 16:22:57] "GET /favicon.ico HTTP/1.1" 404 2832
+[09/May/2026 16:24:28] "GET /accounts/register/ HTTP/1.1" 200 5742
+[09/May/2026 16:24:44] "GET /accounts/login/ HTTP/1.1" 200 3822
+[09/May/2026 16:24:44] "GET /static/css/style.css HTTP/1.1" 304 0
+[09/May/2026 16:24:44] "GET /static/js/main.js HTTP/1.1" 304 0
+[09/May/2026 16:24:53] "GET /problems/ HTTP/1.1" 200 5979

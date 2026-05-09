@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Submissions | CodeSentinel{% endblock %}
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<section class="page-shell">
+    <div class="content-top">
+        <div>
+            <span class="eyebrow">Execution archive</span>
+            <h1>Submission History</h1>
+        </div>
+        <a href="{% url 'problems:list' %}" class="btn btn-neon rounded-pill px-4">Solve More</a>
+    </div>
+
+    <div class="data-panel mt-4">
+        <div class="table-responsive">
+            <table class="table cs-table align-middle">
+                <thead>
+                <tr>
+                    <th>Problem</th>
+                    <th>Language</th>
+                    <th>Verdict</th>
+                    <th>Failed Case</th>
+                    <th>Time</th>
+                    <th>Submitted</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for submission in page_obj %}
+                    <tr>
+                        <td><a href="{{ submission.problem.get_absolute_url }}">{{ submission.problem.title }}</a></td>
+                        <td>{{ submission.get_language_display }}</td>
+                        <td><span class="verdict-badge {{ submission.verdict|slugify }}">{{ submission.verdict }}</span></td>
+                        <td>{{ submission.failed_test_number|default:"-" }}</td>
+                        <td>{{ submission.execution_time }}s</td>
+                        <td>{{ submission.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6" class="empty-row">Your submission history is empty.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if page_obj.has_other_pages %}
+            <div class="pagination-row">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

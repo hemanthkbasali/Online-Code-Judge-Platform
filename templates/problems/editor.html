@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Solve {{ problem.title }} | CodeSentinel{% endblock %}
+{% block body_class %}editor-page{% endblock %}
+
+{% block content %}
+{{ starter_code|json_script:"starter-code-data" }}
+<section class="editor-shell" data-problem-slug="{{ problem.slug }}">
+    <div class="editor-toolbar">
+        <div>
+            <span class="eyebrow">Now solving</span>
+            <h1>{{ problem.title }}</h1>
+        </div>
+        <div class="editor-actions">
+            <select id="languageSelect" class="form-select">
+                <option value="python">Python</option>
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
+            </select>
+            <button id="runBtn" class="btn btn-glass" type="button">
+                <i class="bi bi-play-fill me-1"></i>Run
+            </button>
+            <button id="submitBtn" class="btn btn-neon" type="button">
+                <i class="bi bi-send-fill me-1"></i>Submit
+            </button>
+        </div>
+    </div>
+
+    <div class="editor-grid">
+        <aside class="problem-pane">
+            <span class="difficulty-badge {{ problem.difficulty }}">{{ problem.get_difficulty_display }}</span>
+            <h2>Description</h2>
+            <p>{{ problem.statement|linebreaksbr }}</p>
+            {% if problem.constraints %}
+                <h2>Constraints</h2>
+                <pre class="sample-box">{{ problem.constraints }}</pre>
+            {% endif %}
+            <h2>Sample Input</h2>
+            <pre class="sample-box">{{ problem.sample_input }}</pre>
+            <h2>Sample Output</h2>
+            <pre class="sample-box">{{ problem.sample_output }}</pre>
+        </aside>
+
+        <section class="coding-pane">
+            <div id="monacoEditor" class="monaco-box"></div>
+            <textarea id="fallbackEditor" class="fallback-editor" spellcheck="false"></textarea>
+        </section>
+
+        <aside class="console-pane">
+            <div class="console-tabs">
+                <button class="active" type="button" data-console-tab="input">Input</button>
+                <button type="button" data-console-tab="output">Output</button>
+            </div>
+            <div class="console-panel active" id="inputPanel">
+                <textarea id="stdinInput" spellcheck="false">{{ problem.sample_input }}</textarea>
+            </div>
+            <div class="console-panel" id="outputPanel">
+                <div id="judgeStatus" class="judge-status">Ready</div>
+                <pre id="outputConsole">Run your code to see output here.</pre>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+<script src="{% static 'js/editor.js' %}"></script>
+{% endblock %}
