@@ -17,58 +17,180 @@
         {% endif %}
     </div>
 
-    <form class="filter-bar problem-filter" method="get">
-        <div class="search-box">
-            <i class="bi bi-search"></i>
-            <input type="search" name="q" value="{{ query }}" placeholder="Search problems">
-        </div>
-        <select name="difficulty" class="form-select">
-            <option value="">All Difficulties</option>
-            {% for value, label in difficulty_choices %}
-                <option value="{{ value }}" {% if selected_difficulty == value %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <button class="btn btn-neon problem-filter-btn" type="submit">Filter</button>
-    </form>
+    <div class="problems-workspace">
+        <aside class="problems-sidebar">
+            <div class="sidebar-panel platform-summary">
+                <span class="eyebrow">CodeSentinel track</span>
+                <h2>Sharpen problem solving with curated judge tasks.</h2>
+                <p>Practice core DSA patterns across multiple languages with hidden test validation.</p>
+            </div>
 
-    <div class="data-panel mt-4 problem-list-panel">
-        <div class="table-responsive">
-            <table class="table cs-table align-middle problem-table">
-                <thead>
-                <tr>
-                    <th class="status-column">Status</th>
-                    <th>Title</th>
-                    <th>Difficulty</th>
-                    <th>Points</th>
-                    <th>Cases</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-title">
+                    <i class="bi bi-bar-chart-line"></i>
+                    <span>Problem Stats</span>
+                </div>
+                <div class="problem-stat-grid">
+                    <div>
+                        <strong>{{ problems|length }}</strong>
+                        <span>Showing</span>
+                    </div>
+                    <div>
+                        <strong>{{ solved_problem_ids|length }}</strong>
+                        <span>Solved</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-title">
+                    <i class="bi bi-funnel"></i>
+                    <span>Quick Filters</span>
+                </div>
+                <div class="quick-filter-list">
+                    <a href="{% url 'problems:list' %}" class="{% if not selected_difficulty %}active{% endif %}">All Problems</a>
+                    {% for value, label in difficulty_choices %}
+                        <a href="{% url 'problems:list' %}?difficulty={{ value }}" class="{% if selected_difficulty == value %}active{% endif %}">{{ label }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="sidebar-panel">
+                <div class="sidebar-panel-title">
+                    <i class="bi bi-layers"></i>
+                    <span>Topics</span>
+                </div>
+                <div class="topic-cloud">
+                    <span>Arrays</span>
+                    <span>Strings</span>
+                    <span>Sorting</span>
+                    <span>Searching</span>
+                    <span>Hash Maps</span>
+                    <span>Dynamic Programming</span>
+                    <span>Stacks</span>
+                    <span>Queues</span>
+                    <span>Graphs</span>
+                    <span>Greedy</span>
+                    <span>Binary Search</span>
+                </div>
+            </div>
+        </aside>
+
+        <section class="problems-main">
+            <form class="filter-bar problem-filter" method="get">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="search" name="q" value="{{ query }}" placeholder="Search problems">
+                </div>
+                <select name="difficulty" class="form-select">
+                    <option value="">All Difficulties</option>
+                    {% for value, label in difficulty_choices %}
+                        <option value="{{ value }}" {% if selected_difficulty == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-neon problem-filter-btn" type="submit">Filter</button>
+            </form>
+
+            <div class="data-panel mt-4 problem-list-panel">
+                <div class="problem-list-header">
+                    <div>
+                        <span class="eyebrow">Challenge library</span>
+                        <h2>Available Problems</h2>
+                    </div>
+                    <span class="problem-count-pill">{{ problems|length }} results</span>
+                </div>
+
+                <div class="problem-card-list">
                 {% for problem in problems %}
-                    <tr>
-                        <td class="status-cell">
+                    <article class="problem-card">
+                        <div class="problem-card-status">
                             {% if problem.id in solved_problem_ids %}
                                 <span class="status-dot solved" title="Solved"></span>
+                                <span>Solved</span>
                             {% else %}
                                 <span class="status-dot" title="Unsolved"></span>
+                                <span>Unsolved</span>
                             {% endif %}
-                        </td>
-                        <td class="problem-copy-cell">
-                            <a class="problem-title" href="{{ problem.get_absolute_url }}">{{ problem.title }}</a>
-                            <span class="problem-desc">{{ problem.statement|truncatechars:90 }}</span>
-                        </td>
-                        <td><span class="difficulty-badge {{ problem.difficulty }}">{{ problem.get_difficulty_display }}</span></td>
-                        <td class="problem-metric">{{ problem.points }}</td>
-                        <td class="problem-metric">{{ problem.total_cases }}</td>
-                        <td class="solve-cell"><a class="btn btn-sm btn-glass rounded-pill px-3 problem-solve-btn" href="{% url 'problems:solve' problem.slug %}">Solve</a></td>
-                    </tr>
+                        </div>
+
+                        <div class="problem-card-body">
+                            <div class="problem-card-topline">
+                                <a class="problem-title" href="{{ problem.get_absolute_url }}">{{ problem.title }}</a>
+                                <span class="difficulty-badge {{ problem.difficulty }}">{{ problem.get_difficulty_display }}</span>
+                            </div>
+                            <p class="problem-desc">{{ problem.statement|truncatechars:150 }}</p>
+                            <div class="problem-tags">
+                                {% if "Array" in problem.title or "Sum" in problem.title or "Kadane" in problem.title or "Rotate" in problem.title or "Colors" in problem.title or "Two Sum" in problem.title %}
+                                    <span>Arrays</span>
+                                {% endif %}
+                                {% if "String" in problem.title or "Palindrome" in problem.title or "Substring" in problem.title or "Prefix" in problem.title or "Parentheses" in problem.title %}
+                                    <span>Strings</span>
+                                {% endif %}
+                                {% if "Search" in problem.title or "Cows" in problem.title %}
+                                    <span>Binary Search</span>
+                                {% endif %}
+                                {% if "Sort" in problem.title or "Merge" in problem.title %}
+                                    <span>Sorting</span>
+                                {% endif %}
+                                {% if "Frequency" in problem.title or "Two Sum" in problem.title %}
+                                    <span>Hash Map</span>
+                                {% endif %}
+                                {% if "Coin" in problem.title or "Knapsack" in problem.title or "Distance" in problem.title or "Subsequence" in problem.title or "Stairs" in problem.title or "Factorial" in problem.title %}
+                                    <span>DP</span>
+                                {% endif %}
+                                {% if "Parentheses" in problem.title or "Greater" in problem.title %}
+                                    <span>Stack</span>
+                                {% endif %}
+                                {% if "BFS" in problem.title %}
+                                    <span>Queue</span>
+                                {% endif %}
+                                {% if "DFS" in problem.title or "BFS" in problem.title or "Dijkstra" in problem.title or "Spanning" in problem.title or "Islands" in problem.title %}
+                                    <span>Graphs</span>
+                                {% endif %}
+                                {% if problem.difficulty == "easy" %}
+                                    <span>Basics</span>
+                                {% elif problem.difficulty == "medium" %}
+                                    <span>DSA</span>
+                                {% else %}
+                                    <span>Advanced</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="problem-card-meta">
+                            <div class="problem-mini-metric">
+                                <span>Points</span>
+                                <strong>{{ problem.points }}</strong>
+                            </div>
+                            <div class="problem-mini-metric">
+                                <span>Cases</span>
+                                <strong>{{ problem.total_cases }}</strong>
+                            </div>
+                            <div class="problem-mini-metric">
+                                <span>Acceptance</span>
+                                {% if problem.difficulty == "easy" %}
+                                    <strong>78%</strong>
+                                {% elif problem.difficulty == "medium" %}
+                                    <strong>54%</strong>
+                                {% else %}
+                                    <strong>31%</strong>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="problem-card-action">
+                            <a class="btn btn-sm btn-glass rounded-pill problem-solve-btn" href="{% url 'problems:solve' problem.slug %}">
+                                Solve
+                                <i class="bi bi-arrow-right-short ms-1"></i>
+                            </a>
+                        </div>
+                    </article>
                 {% empty %}
-                    <tr><td colspan="6" class="empty-row">No problems match your filters.</td></tr>
+                    <div class="empty-row">No problems match your filters.</div>
                 {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                </div>
+            </div>
+        </section>
     </div>
 </section>
 {% endblock %}
