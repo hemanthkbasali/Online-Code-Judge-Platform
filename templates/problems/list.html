@@ -17,7 +17,7 @@
         {% endif %}
     </div>
 
-    <form class="filter-bar" method="get">
+    <form class="filter-bar problem-filter" method="get">
         <div class="search-box">
             <i class="bi bi-search"></i>
             <input type="search" name="q" value="{{ query }}" placeholder="Search problems">
@@ -28,15 +28,15 @@
                 <option value="{{ value }}" {% if selected_difficulty == value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
-        <button class="btn btn-neon" type="submit">Filter</button>
+        <button class="btn btn-neon problem-filter-btn" type="submit">Filter</button>
     </form>
 
-    <div class="data-panel mt-4">
+    <div class="data-panel mt-4 problem-list-panel">
         <div class="table-responsive">
             <table class="table cs-table align-middle problem-table">
                 <thead>
                 <tr>
-                    <th>Status</th>
+                    <th class="status-column">Status</th>
                     <th>Title</th>
                     <th>Difficulty</th>
                     <th>Points</th>
@@ -47,21 +47,21 @@
                 <tbody>
                 {% for problem in problems %}
                     <tr>
-                        <td>
+                        <td class="status-cell">
                             {% if problem.id in solved_problem_ids %}
                                 <span class="status-dot solved" title="Solved"></span>
                             {% else %}
                                 <span class="status-dot" title="Unsolved"></span>
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="problem-copy-cell">
                             <a class="problem-title" href="{{ problem.get_absolute_url }}">{{ problem.title }}</a>
                             <span class="problem-desc">{{ problem.statement|truncatechars:90 }}</span>
                         </td>
                         <td><span class="difficulty-badge {{ problem.difficulty }}">{{ problem.get_difficulty_display }}</span></td>
-                        <td>{{ problem.points }}</td>
-                        <td>{{ problem.total_cases }}</td>
-                        <td><a class="btn btn-sm btn-glass rounded-pill px-3" href="{% url 'problems:solve' problem.slug %}">Solve</a></td>
+                        <td class="problem-metric">{{ problem.points }}</td>
+                        <td class="problem-metric">{{ problem.total_cases }}</td>
+                        <td class="solve-cell"><a class="btn btn-sm btn-glass rounded-pill px-3 problem-solve-btn" href="{% url 'problems:solve' problem.slug %}">Solve</a></td>
                     </tr>
                 {% empty %}
                     <tr><td colspan="6" class="empty-row">No problems match your filters.</td></tr>

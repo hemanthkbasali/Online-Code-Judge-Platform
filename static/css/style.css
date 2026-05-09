@@ -543,6 +543,13 @@ a:hover {
     padding: 1rem;
 }
 
+.problem-list-panel {
+    background:
+        linear-gradient(180deg, rgba(56, 232, 255, 0.055), rgba(255, 255, 255, 0.018)),
+        rgba(12, 17, 29, 0.9);
+    border-color: rgba(126, 229, 255, 0.16);
+}
+
 .panel-heading {
     padding: 0.5rem 0.5rem 1rem;
 }
@@ -561,14 +568,20 @@ a:hover {
 }
 
 .cs-table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text);
+    --bs-table-border-color: rgba(255, 255, 255, 0.10);
+    --bs-table-hover-bg: rgba(56, 232, 255, 0.08);
+    --bs-table-hover-color: var(--text);
     color: var(--text);
     margin: 0;
 }
 
 .cs-table thead th {
-    color: var(--muted);
+    color: #b9c8dc;
     border-bottom: 1px solid var(--line);
     font-size: 0.82rem;
+    font-weight: 850;
     text-transform: uppercase;
 }
 
@@ -579,6 +592,58 @@ a:hover {
 
 .cs-table tbody tr:hover {
     background: rgba(255, 255, 255, 0.04);
+}
+
+.problem-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+.problem-table thead th {
+    background: rgba(7, 12, 22, 0.74);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 1rem 0.95rem;
+}
+
+.problem-table tbody tr {
+    position: relative;
+    background: rgba(13, 19, 32, 0.72);
+    transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.problem-table tbody tr:nth-child(even) {
+    background: rgba(17, 24, 39, 0.64);
+}
+
+.problem-table tbody tr:hover {
+    background: rgba(32, 45, 66, 0.92);
+    box-shadow: inset 3px 0 0 rgba(56, 232, 255, 0.74), 0 0 28px rgba(56, 232, 255, 0.08);
+    transform: translateY(-1px);
+}
+
+.problem-table td {
+    padding: 1rem 0.95rem;
+    vertical-align: middle;
+}
+
+.problem-table .status-column,
+.problem-table .status-cell {
+    width: 5.4rem;
+    text-align: center;
+}
+
+.problem-table .problem-copy-cell {
+    min-width: 18rem;
+}
+
+.problem-table .problem-metric {
+    color: #d9e7f7;
+    font-weight: 800;
+}
+
+.problem-table .solve-cell {
+    text-align: right;
 }
 
 .empty-row {
@@ -599,27 +664,31 @@ a:hover {
     font-weight: 850;
 }
 
+.difficulty-badge {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
 .verdict-badge.accepted,
 .difficulty-badge.easy {
-    color: var(--green);
-    background: rgba(87, 242, 154, 0.12);
-    border: 1px solid rgba(87, 242, 154, 0.28);
+    color: #82ffb5;
+    background: rgba(87, 242, 154, 0.16);
+    border: 1px solid rgba(87, 242, 154, 0.38);
 }
 
 .verdict-badge.wrong-answer,
 .difficulty-badge.medium {
-    color: var(--amber);
-    background: rgba(255, 209, 102, 0.12);
-    border: 1px solid rgba(255, 209, 102, 0.28);
+    color: #ffe08a;
+    background: rgba(255, 209, 102, 0.16);
+    border: 1px solid rgba(255, 209, 102, 0.38);
 }
 
 .verdict-badge.compilation-error,
 .verdict-badge.runtime-error,
 .verdict-badge.time-limit-exceeded,
 .difficulty-badge.hard {
-    color: var(--red);
-    background: rgba(255, 102, 122, 0.12);
-    border: 1px solid rgba(255, 102, 122, 0.28);
+    color: #ff91a0;
+    background: rgba(255, 102, 122, 0.16);
+    border: 1px solid rgba(255, 102, 122, 0.38);
 }
 
 .filter-bar {
@@ -650,17 +719,43 @@ a:hover {
     outline: 0;
 }
 
+.problem-filter .form-select,
+.problem-filter .search-box input {
+    background-color: rgba(8, 13, 24, 0.86);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.problem-filter .search-box input::placeholder {
+    color: #74849a;
+}
+
+.problem-filter .search-box i {
+    color: #a8b8cc;
+}
+
+.problem-filter-btn {
+    min-width: 5.8rem;
+}
+
 .problem-title {
     display: block;
-    color: var(--text);
-    font-weight: 850;
+    color: #f5f9ff;
+    font-weight: 900;
+    line-height: 1.35;
+    transition: color 160ms ease;
+}
+
+.problem-title:hover {
+    color: var(--cyan);
 }
 
 .problem-desc {
     display: block;
     max-width: 42rem;
-    color: var(--muted);
+    color: #aebdd1;
     font-size: 0.88rem;
+    line-height: 1.55;
+    margin-top: 0.2rem;
 }
 
 .status-dot {
@@ -668,14 +763,32 @@ a:hover {
     width: 0.82rem;
     height: 0.82rem;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(180, 197, 219, 0.36);
+    background: rgba(180, 197, 219, 0.12);
+    box-shadow: 0 0 0 4px rgba(180, 197, 219, 0.045);
 }
 
 .status-dot.solved {
     border-color: rgba(87, 242, 154, 0.5);
     background: var(--green);
     box-shadow: 0 0 16px rgba(87, 242, 154, 0.34);
+}
+
+.problem-solve-btn {
+    border-color: rgba(56, 232, 255, 0.26);
+    color: #e9f8ff;
+    background: rgba(56, 232, 255, 0.08);
+    font-weight: 850;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.problem-solve-btn:hover,
+.problem-solve-btn:focus {
+    color: #041016;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    border-color: transparent;
+    box-shadow: 0 0 22px rgba(56, 232, 255, 0.22);
+    transform: translateY(-1px);
 }
 
 .problem-header {
