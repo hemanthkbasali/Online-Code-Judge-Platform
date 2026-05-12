@@ -57,6 +57,24 @@
                 {% empty %}
                     <p class="muted-text">Hidden cases are configured by the admin. Use the sample to test your first run.</p>
                 {% endfor %}
+
+                <!-- AI Hint Assistant Panel -->
+                <div class="ai-hint-card" onclick="this.classList.toggle('open')">
+                    <div class="ai-hint-header">
+                        <i class="bi bi-robot"></i>
+                        <h3 class="ai-hint-title">AI Assistant Guidance</h3>
+                        <i class="bi bi-chevron-down ai-hint-toggle"></i>
+                    </div>
+                    <div class="ai-hint-body">
+                        <div class="ai-hint-badge">Complexity Target</div>
+                        <p>Expected Time Complexity: <strong>O(N)</strong><br>
+                        Expected Space Complexity: <strong>O(1)</strong> or <strong>O(N)</strong></p>
+                        
+                        <div class="ai-hint-badge mt-2">Approach Hint</div>
+                        <p>Consider looking at edge cases first. Can this be solved using a greedy approach or dynamic programming? Start by breaking down the constraints and looking for patterns in the sample input.</p>
+                        <em class="text-muted" style="font-size: 0.8rem;">Note: AI hints are dynamically generated based on problem tags and difficulty.</em>
+                    </div>
+                </div>
             </div>
 
             <div class="side-panel mt-4">

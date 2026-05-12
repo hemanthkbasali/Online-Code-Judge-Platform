@@ -102,13 +102,16 @@
 
                 <div class="problem-card-list">
                 {% for problem in problems %}
-                    <article class="problem-card">
+                    <article class="problem-card {% if problem.id in solved_problem_ids %}is-solved{% elif problem.id in attempted_problem_ids %}is-attempted{% else %}is-unsolved{% endif %}">
                         <div class="problem-card-status">
                             {% if problem.id in solved_problem_ids %}
                                 <span class="status-dot solved" title="Solved"></span>
                                 <span>Solved</span>
+                            {% elif problem.id in attempted_problem_ids %}
+                                <span class="status-dot attempted" title="Attempted"></span>
+                                <span>Attempted</span>
                             {% else %}
-                                <span class="status-dot" title="Unsolved"></span>
+                                <span class="status-dot unsolved" title="Unsolved"></span>
                                 <span>Unsolved</span>
                             {% endif %}
                         </div>

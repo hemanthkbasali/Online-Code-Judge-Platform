@@ -92,3 +92,50 @@ Not Found: /favicon.ico
 [09/May/2026 18:03:13] "GET /static/css/style.css HTTP/1.1" 304 0
 [09/May/2026 18:03:30] "GET /problems/ HTTP/1.1" 200 119461
 [09/May/2026 18:03:31] "GET /static/css/style.css HTTP/1.1" 304 0
+Not Found: /MediFind - v1/admin/login.php
+[09/May/2026 18:06:28] "GET /MediFind%20-%20v1/admin/login.php HTTP/1.1" 404 2890
+Not Found: /MediFind - v1/index.php
+[09/May/2026 18:07:02] "GET /MediFind%20-%20v1/index.php HTTP/1.1" 404 2872
+[09/May/2026 18:20:21] "GET /problems/ HTTP/1.1" 200 119461
+[09/May/2026 18:20:21] "GET /static/css/style.css HTTP/1.1" 200 35079
+[09/May/2026 18:20:22] "GET /static/js/main.js HTTP/1.1" 304 0
+[09/May/2026 18:20:42] "GET /problems/ HTTP/1.1" 200 119461
+[09/May/2026 18:20:45] "GET / HTTP/1.1" 200 7656
+[09/May/2026 18:20:50] "GET /problems/ HTTP/1.1" 200 119461
+[09/May/2026 18:20:55] "GET /problems/sum-of-two-numbers/solve/ HTTP/1.1" 302 0
+[09/May/2026 18:20:55] "GET /accounts/login/?next=/problems/sum-of-two-numbers/solve/ HTTP/1.1" 200 3822
+[09/May/2026 18:26:20] "GET /problems/ HTTP/1.1" 200 119461
+[09/May/2026 18:26:20] "GET /static/css/style.css HTTP/1.1" 304 0
+[09/May/2026 18:38:49] "GET / HTTP/1.1" 200 7656
+[09/May/2026 18:38:49] "GET /static/js/main.js HTTP/1.1" 304 0
+[09/May/2026 18:38:49] "GET /static/css/style.css HTTP/1.1" 304 0
+[09/May/2026 18:38:55] "GET /problems/ HTTP/1.1" 200 119461
+[09/May/2026 18:39:15] "GET / HTTP/1.1" 200 7656
+Not Found: /:String
+[09/May/2026 18:47:47] "GET /:String HTTP/1.1" 404 2820
+Not Found: /favicon.ico
+[09/May/2026 18:47:47] "GET /favicon.ico HTTP/1.1" 404 2832
+[09/May/2026 18:48:09] "GET / HTTP/1.1" 200 7656
+[09/May/2026 18:48:09] "GET /static/css/style.css HTTP/1.1" 200 35079
+[09/May/2026 18:48:09] "GET /static/js/main.js HTTP/1.1" 200 2022
+[09/May/2026 18:48:24] "GET / HTTP/1.1" 200 7656
+Not Found: /index.php
+[09/May/2026 18:50:06] "GET /index.php HTTP/1.1" 404 2826
+[09/May/2026 19:00:09] "GET /problems/ HTTP/1.1" 200 119461
+[09/May/2026 19:00:09] "GET /static/css/style.css HTTP/1.1" 304 0
+[09/May/2026 19:00:32] "GET /problems/sum-of-two-numbers/solve/ HTTP/1.1" 302 0
+[09/May/2026 19:00:32] "GET /accounts/login/?next=/problems/sum-of-two-numbers/solve/ HTTP/1.1" 200 3822
+[09/May/2026 19:00:46] "POST /accounts/login/?next=/problems/sum-of-two-numbers/solve/ HTTP/1.1" 200 4283
+[09/May/2026 19:01:01] "POST /accounts/login/?next=/problems/sum-of-two-numbers/solve/ HTTP/1.1" 200 4283
+[09/May/2026 19:01:02] "GET /accounts/register/ HTTP/1.1" 200 5742
+[09/May/2026 19:01:56] "POST /accounts/register/ HTTP/1.1" 302 0
+[09/May/2026 19:01:56] "GET /accounts/dashboard/ HTTP/1.1" 200 5578
+[09/May/2026 19:02:05] "GET /problems/ HTTP/1.1" 200 119603
+[09/May/2026 19:02:07] "GET /problems/sum-of-two-numbers/solve/ HTTP/1.1" 200 5508
+[09/May/2026 19:02:07] "GET /static/js/editor.js HTTP/1.1" 200 6244
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[09/May/2026 19:02:35] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 2943
+[09/May/2026 19:06:13] "GET /problems/ HTTP/1.1" 200 119603
+[09/May/2026 19:06:13] "GET /static/css/style.css HTTP/1.1" 304 0
+[09/May/2026 19:06:13] "GET /static/js/main.js HTTP/1.1" 304 0
+[09/May/2026 19:06:35] "GET /problems/binary-search/solve/ HTTP/1.1" 200 5612

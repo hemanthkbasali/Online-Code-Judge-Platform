@@ -7,10 +7,15 @@
 <div class="app-layout">
     <aside class="sidebar">
         <div class="profile-mini">
-            <div class="avatar">{{ user.initials }}</div>
+            <div class="avatar" style="box-shadow: 0 0 15px rgba(56, 232, 255, 0.3);">{{ user.initials }}</div>
             <div>
-                <strong>{{ user.public_name }}</strong>
-                <span>{{ user.institution|default:"CodeSentinel Member" }}</span>
+                <strong style="font-size: 1.1rem; letter-spacing: -0.02em;">{{ user.public_name }}</strong>
+                <span style="font-size: 0.8rem; opacity: 0.8;">{{ user.institution|default:"CodeSentinel Member" }}</span>
+                <div class="mt-2 d-flex gap-1">
+                    <span class="badge" style="background: rgba(56, 232, 255, 0.1); color: var(--cyan); border: 1px solid rgba(56, 232, 255, 0.2);" title="Early Bird"><i class="bi bi-brightness-high"></i></span>
+                    <span class="badge" style="background: rgba(74, 222, 128, 0.1); color: var(--green); border: 1px solid rgba(74, 222, 128, 0.2);" title="Streak Master"><i class="bi bi-fire"></i></span>
+                    <span class="badge" style="background: rgba(167, 139, 250, 0.1); color: var(--purple); border: 1px solid rgba(167, 139, 250, 0.2);" title="Algorithm Expert"><i class="bi bi-diagram-3"></i></span>
+                </div>
             </div>
         </div>
         <nav class="side-nav">
@@ -31,60 +36,236 @@
             <a href="{% url 'problems:list' %}" class="btn btn-neon rounded-pill px-4">Solve Now</a>
         </div>
 
-        <div class="row g-3">
+        <div class="row g-4">
             <div class="col-md-6 col-xl-3">
-                <div class="metric-card">
-                    <span class="metric-label">Problems</span>
-                    <strong class="counter" data-target="{{ total_problems }}">0</strong>
+                <div class="metric-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span class="metric-label">Total Problems</span>
+                        <strong class="counter d-block mt-1" data-target="{{ total_problems }}">0</strong>
+                    </div>
+                    <i class="bi bi-stack" style="font-size: 2rem; color: var(--muted); opacity: 0.3;"></i>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
-                <div class="metric-card">
-                    <span class="metric-label">Solved</span>
-                    <strong class="counter" data-target="{{ solved_count }}">0</strong>
+                <div class="metric-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span class="metric-label">Solved Problems</span>
+                        <strong class="counter d-block mt-1 text-success" data-target="{{ solved_count }}">0</strong>
+                    </div>
+                    <i class="bi bi-check-circle" style="font-size: 2rem; color: var(--green); opacity: 0.3;"></i>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
-                <div class="metric-card">
-                    <span class="metric-label">Submissions</span>
-                    <strong class="counter" data-target="{{ total_submissions }}">0</strong>
+                <div class="metric-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span class="metric-label">Submissions</span>
+                        <strong class="counter d-block mt-1 text-info" data-target="{{ total_submissions }}">0</strong>
+                    </div>
+                    <i class="bi bi-send" style="font-size: 2rem; color: var(--cyan); opacity: 0.3;"></i>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
-                <div class="metric-card">
-                    <span class="metric-label">Accuracy</span>
-                    <strong><span class="counter" data-target="{{ accuracy }}">0</span>%</strong>
+                <div class="metric-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span class="metric-label">Accuracy Rate</span>
+                        <strong class="d-block mt-1 text-warning"><span class="counter" data-target="{{ accuracy }}">0</span>%</strong>
+                    </div>
+                    <i class="bi bi-bullseye" style="font-size: 2rem; color: var(--amber); opacity: 0.3;"></i>
                 </div>
             </div>
         </div>
 
-        <div class="data-panel mt-4">
-            <div class="panel-heading">
-                <h2>Recent Submissions</h2>
-                <a href="{% url 'submissions:history' %}">View all</a>
+        <!-- ── Activity Heatmap ────────────────────────────────── -->
+        <div class="hm-panel mt-5">
+            <!-- Data bridge: heatmap JS reads these attributes -->
+            <div id="hm-data"
+                 data-weeks="{{ heatmap_json|escapejs }}"
+                 data-months="{{ heatmap_months_json|escapejs }}"
+                 hidden></div>
+
+            <!-- Panel header -->
+            <div class="hm-header">
+                <div class="hm-header-left">
+                    <span class="hm-icon"><i class="bi bi-activity"></i></span>
+                    <div>
+                        <span class="eyebrow">365-day overview</span>
+                        <h2 class="hm-title">Coding Activity</h2>
+                    </div>
+                </div>
+                <div class="hm-streak-group">
+                    <div class="hm-streak-badge hm-streak-current{% if current_streak > 0 %} hm-streak-active{% endif %}">
+                        <i class="bi bi-fire"></i>
+                        <span class="hm-streak-num">{{ current_streak }}</span>
+                        <span class="hm-streak-label">day streak</span>
+                    </div>
+                    <div class="hm-streak-badge hm-streak-best">
+                        <i class="bi bi-trophy"></i>
+                        <span class="hm-streak-num">{{ longest_streak }}</span>
+                        <span class="hm-streak-label">best streak</span>
+                    </div>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="table cs-table align-middle">
+
+            <!-- Heatmap grid — built by heatmap.js -->
+            <div class="hm-body">
+                <div class="hm-scroll-wrap">
+                    <div class="hm-grid-root" id="hm-grid-root">
+                        <!-- JS renders month labels + week columns here -->
+                    </div>
+                </div>
+
+                <!-- Intensity legend -->
+                <div class="hm-legend">
+                    <span class="hm-legend-label">Less</span>
+                    <span class="hm-cell hm-l0"></span>
+                    <span class="hm-cell hm-l1"></span>
+                    <span class="hm-cell hm-l2"></span>
+                    <span class="hm-cell hm-l3"></span>
+                    <span class="hm-cell hm-l4"></span>
+                    <span class="hm-legend-label">More</span>
+                </div>
+            </div>
+
+            <!-- Activity stats bar -->
+            <div class="hm-stats-bar">
+                <div class="hm-stat">
+                    <strong>{{ total_active_days }}</strong>
+                    <span>Active days</span>
+                </div>
+                <div class="hm-stat-divider"></div>
+                <div class="hm-stat">
+                    <strong>{{ current_streak }}</strong>
+                    <span>Current streak</span>
+                </div>
+                <div class="hm-stat-divider"></div>
+                <div class="hm-stat">
+                    <strong>{{ longest_streak }}</strong>
+                    <span>Longest streak</span>
+                </div>
+                <div class="hm-stat-divider"></div>
+                <div class="hm-stat">
+                    <strong>{{ month_submissions }}</strong>
+                    <span>This month</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Upcoming Contests ────────────────────────────── -->
+        {% if upcoming_contests %}
+        <div class="mt-5">
+            <div class="contest-header mb-3">
+                <div class="sub-history-header-left">
+                    <i class="bi bi-trophy sub-history-icon"></i>
+                    <div>
+                        <span class="eyebrow">Compete & rank up</span>
+                        <h2 class="sub-history-title" style="margin: 0; font-size: 1.15rem;">Upcoming Contests</h2>
+                    </div>
+                </div>
+                <a href="{% url 'contests:list' %}" class="sub-history-viewall">
+                    All contests <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="contest-grid">
+                {% for contest in upcoming_contests %}
+                {% include "contests/_contest_card.html" with contest=contest %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ── Recent Submissions ───────────────────────────── -->
+        <div class="sub-history-panel mt-5">
+            <div class="sub-history-header">
+                <div class="sub-history-header-left">
+                    <i class="bi bi-clock-history sub-history-icon"></i>
+                    <div>
+                        <span class="eyebrow">Latest activity</span>
+                        <h2 class="sub-history-title">Recent Submissions</h2>
+                    </div>
+                </div>
+                <a href="{% url 'submissions:history' %}" class="sub-history-viewall">
+                    View all <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="table-responsive sub-history-table-wrap">
+                <table class="table cs-table sub-history-table align-middle">
                     <thead>
-                    <tr>
-                        <th>Problem</th>
-                        <th>Language</th>
-                        <th>Verdict</th>
-                        <th>Time</th>
-                        <th>Submitted</th>
-                    </tr>
+                        <tr>
+                            <th class="sub-col-status">Status</th>
+                            <th class="sub-col-problem">Problem</th>
+                            <th class="sub-col-lang">Language</th>
+                            <th class="sub-col-runtime">Runtime</th>
+                            <th class="sub-col-memory">Memory</th>
+                            <th class="sub-col-when">Submitted</th>
+                        </tr>
                     </thead>
                     <tbody>
                     {% for submission in recent_submissions %}
-                        <tr>
-                            <td><a href="{{ submission.problem.get_absolute_url }}">{{ submission.problem.title }}</a></td>
-                            <td>{{ submission.get_language_display }}</td>
-                            <td><span class="verdict-badge {{ submission.verdict|slugify }}">{{ submission.verdict }}</span></td>
-                            <td>{{ submission.execution_time }}s</td>
-                            <td>{{ submission.created_at|date:"M d, H:i" }}</td>
+                        <tr class="sub-row sub-row--{{ submission.verdict_css_class }}">
+                            <td class="sub-col-status">
+                                <div class="sub-verdict-wrap">
+                                    <span class="sub-verdict-badge {{ submission.verdict_css_class }}{% if submission.is_accepted %} sub-verdict-pulse{% endif %}">
+                                        {% if submission.is_accepted %}
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        {% elif submission.verdict == "Wrong Answer" %}
+                                            <i class="bi bi-x-circle-fill"></i>
+                                        {% elif submission.verdict == "Time Limit Exceeded" %}
+                                            <i class="bi bi-hourglass-split"></i>
+                                        {% elif submission.verdict == "Runtime Error" %}
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                        {% elif submission.verdict == "Compilation Error" %}
+                                            <i class="bi bi-bug-fill"></i>
+                                        {% else %}
+                                            <i class="bi bi-question-circle"></i>
+                                        {% endif %}
+                                        <span>{{ submission.verdict }}</span>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="sub-col-problem">
+                                <a class="sub-problem-link" href="{{ submission.problem.get_absolute_url }}">
+                                    {{ submission.problem.title }}
+                                </a>
+                                {% if submission.failed_test_number %}
+                                    <span class="sub-failed-case">Case #{{ submission.failed_test_number }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="sub-col-lang">
+                                <span class="sub-lang-badge">{{ submission.get_language_display }}</span>
+                            </td>
+                            <td class="sub-col-runtime">
+                                <div class="sub-perf-chip">
+                                    <i class="bi bi-lightning"></i>
+                                    <span>{{ submission.execution_time|floatformat:3 }}s</span>
+                                </div>
+                            </td>
+                            <td class="sub-col-memory">
+                                <div class="sub-perf-chip sub-perf-chip--mem">
+                                    <i class="bi bi-memory"></i>
+                                    <span>
+                                        {% if submission.memory_usage %}
+                                            {% widthratio submission.memory_usage 1024 1 %} MB
+                                        {% else %}
+                                            &mdash;
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="sub-col-when">
+                                <time class="sub-time" datetime="{{ submission.created_at|date:'c' }}" title="{{ submission.created_at|date:'N j, Y H:i:s' }}">
+                                    {{ submission.created_at|date:"M j, H:i" }}
+                                </time>
+                            </td>
                         </tr>
                     {% empty %}
-                        <tr><td colspan="5" class="empty-row">No submissions yet. Pick a problem and send your first solution.</td></tr>
+                        <tr>
+                            <td colspan="6" class="sub-empty-state">
+                                <i class="bi bi-inbox"></i>
+                                <p>No submissions yet. Pick a problem and send your first solution.</p>
+                            </td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>
@@ -92,4 +273,10 @@
         </div>
     </section>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/heatmap.js' %}"></script>
+<script src="{% static 'js/contests.js' %}"></script>
 {% endblock %}

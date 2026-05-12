@@ -27,6 +27,7 @@ def problem_list(request):
         problems = problems.filter(difficulty=difficulty)
 
     solved_problem_ids = set()
+    attempted_problem_ids = set()
     if request.user.is_authenticated:
         solved_problem_ids = set(
             Submission.objects.filter(
@@ -34,6 +35,11 @@ def problem_list(request):
                 verdict=Submission.VERDICT_ACCEPTED,
             ).values_list("problem_id", flat=True)
         )
+        attempted_problem_ids = set(
+            Submission.objects.filter(
+                user=request.user,
+            ).values_list("problem_id", flat=True)
+        ) - solved_problem_ids
 
     context = {
         "problems": problems,
@@ -41,6 +47,7 @@ def problem_list(request):
         "selected_difficulty": difficulty,
         "difficulty_choices": Problem.DIFFICULTY_CHOICES,
         "solved_problem_ids": solved_problem_ids,
+        "attempted_problem_ids": attempted_problem_ids,
     }
     return render(request, "problems/list.html", context)
 

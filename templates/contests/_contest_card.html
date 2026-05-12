@@ -1,0 +1,35 @@
+<div class="contest-card {% if contest.status == 'live' %}contest-is-live{% elif contest.status == 'completed' %}contest-is-ended{% endif %}">
+    <h3 class="contest-title">
+        <a href="{% url 'contests:detail' contest.slug %}" style="color: inherit; text-decoration: none;">{{ contest.title }}</a>
+    </h3>
+    <div class="contest-meta">
+        <div class="contest-meta-item">
+            <i class="bi bi-calendar3"></i> {{ contest.start_time|date:"M j, Y, H:i" }}
+        </div>
+        <div class="contest-meta-item">
+            <i class="bi bi-clock"></i> {{ contest.duration_display }}
+        </div>
+        <div class="contest-meta-item">
+            <i class="bi bi-people"></i> {{ contest.participant_count }}
+        </div>
+    </div>
+    
+    <div class="diff-indicator diff-{{ contest.difficulty_css }} mb-3">
+        {% if contest.difficulty_css == 'easy' %}<i class="bi bi-star"></i>
+        {% elif contest.difficulty_css == 'medium' %}<i class="bi bi-star-half"></i>
+        {% else %}<i class="bi bi-star-fill"></i>{% endif %}
+        {{ contest.get_difficulty_display }}
+    </div>
+
+    <div class="contest-timer-wrap">
+        <div class="contest-timer" data-target="{{ contest.start_time_iso }}" data-end="{{ contest.end_time_iso }}">
+            <!-- Populated by JS -->
+        </div>
+        <a href="{% url 'contests:detail' contest.slug %}" class="btn-contest-action">
+            {% if contest.status == 'live' %}Enter Now
+            {% elif contest.status == 'completed' %}View Standing
+            {% elif contest.is_registration_open %}Register
+            {% else %}View Details{% endif %}
+        </a>
+    </div>
+</div>

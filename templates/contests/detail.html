@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}{{ contest.title }} | CodeSentinel{% endblock %}
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+    <aside class="sidebar">
+        <!-- Reusing same sidebar block for consistency -->
+        {% if user.is_authenticated %}
+        <div class="profile-mini">
+            <div class="avatar">{{ user.initials }}</div>
+            <div>
+                <strong>{{ user.public_name }}</strong>
+                <span>{{ user.institution|default:"CodeSentinel Member" }}</span>
+            </div>
+        </div>
+        {% endif %}
+        <nav class="side-nav">
+            {% if user.is_authenticated %}
+            <a href="{% url 'accounts:dashboard' %}"><i class="bi bi-grid"></i>Dashboard</a>
+            {% endif %}
+            <a href="{% url 'problems:list' %}"><i class="bi bi-list-task"></i>Problems</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'submissions:history' %}"><i class="bi bi-clock-history"></i>Submissions</a>
+            {% endif %}
+            <a class="active" href="{% url 'contests:list' %}"><i class="bi bi-trophy"></i>Contests</a>
+            {% if user.is_staff %}
+                <a href="{% url 'admin:index' %}"><i class="bi bi-sliders"></i>Admin</a>
+            {% endif %}
+        </nav>
+    </aside>
+    
+    <section class="app-content">
+        <a href="{% url 'contests:list' %}" class="btn btn-link px-0 text-muted mb-3 text-decoration-none" style="display: inline-block;">
+            <i class="bi bi-arrow-left"></i> Back to Contests
+        </a>
+        
+        <div class="contest-card {% if contest.status == 'live' %}contest-is-live{% elif contest.status == 'completed' %}contest-is-ended{% endif %}" style="max-width: 800px;">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h1 class="contest-title" style="font-size: 2rem; margin:0;">{{ contest.title }}</h1>
+                <div class="diff-indicator diff-{{ contest.difficulty_css }}">
+                    {% if contest.difficulty_css == 'easy' %}<i class="bi bi-star"></i>
+                    {% elif contest.difficulty_css == 'medium' %}<i class="bi bi-star-half"></i>
+                    {% else %}<i class="bi bi-star-fill"></i>{% endif %}
+                    {{ contest.get_difficulty_display }}
+                </div>
+            </div>
+
+            <div class="contest-meta mt-2 mb-4">
+                <div class="contest-meta-item">
+                    <i class="bi bi-calendar3"></i> {{ contest.start_time|date:"F j, Y, H:i T" }}
+                </div>
+                <div class="contest-meta-item">
+                    <i class="bi bi-clock"></i> {{ contest.duration_display }}
+                </div>
+                <div class="contest-meta-item">
+                    <i class="bi bi-people"></i> {{ contest.participant_count }} Registered
+                </div>
+            </div>
+
+            {% if contest.description %}
+            <div class="mb-4" style="color: var(--muted); line-height: 1.6;">
+                {{ contest.description|linebreaks }}
+            </div>
+            {% endif %}
+
+            <div class="contest-timer-wrap pt-4" style="border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: auto;">
+                <div>
+                    <span class="eyebrow mb-1 d-block text-muted">
+                        {% if contest.status == 'upcoming' %}Starts In{% elif contest.status == 'live' %}Ends In{% else %}Status{% endif %}
+                    </span>
+                    <div class="contest-timer" style="font-size: 1.5rem;" data-target="{{ contest.start_time_iso }}" data-end="{{ contest.end_time_iso }}">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                
+                {% if contest.status == 'upcoming' and contest.is_registration_open %}
+                    <button class="btn btn-primary px-4 py-2" style="border-radius: 999px; font-weight: 700;">
+                        Register Now
+                    </button>
+                {% elif contest.status == 'live' %}
+                    <button class="btn btn-success px-4 py-2" style="border-radius: 999px; font-weight: 700; box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);">
+                        Enter Contest
+                    </button>
+                {% elif contest.status == 'completed' %}
+                    <button class="btn btn-secondary px-4 py-2" style="border-radius: 999px; font-weight: 700;">
+                        View Leaderboard
+                    </button>
+                {% else %}
+                    <button class="btn btn-secondary px-4 py-2" disabled style="border-radius: 999px; font-weight: 700;">
+                        Registration Closed
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/contests.js' %}"></script>
+{% endblock %}

@@ -37,6 +37,7 @@ class Submission(models.Model):
     code = models.TextField()
     verdict = models.CharField(max_length=40, choices=VERDICT_CHOICES)
     execution_time = models.FloatField(default=0)
+    memory_usage = models.PositiveIntegerField(default=0, help_text="Peak memory usage in KB")
     failed_test_number = models.PositiveIntegerField(null=True, blank=True)
     output = models.TextField(blank=True)
     error_message = models.TextField(blank=True)
@@ -48,6 +49,18 @@ class Submission(models.Model):
     @property
     def is_accepted(self):
         return self.verdict == self.VERDICT_ACCEPTED
+
+    @property
+    def verdict_css_class(self):
+        """Return a CSS-safe class name for the verdict."""
+        _map = {
+            self.VERDICT_ACCEPTED: "accepted",
+            self.VERDICT_WRONG_ANSWER: "wrong-answer",
+            self.VERDICT_COMPILATION_ERROR: "compilation-error",
+            self.VERDICT_RUNTIME_ERROR: "runtime-error",
+            self.VERDICT_TIME_LIMIT_EXCEEDED: "time-limit-exceeded",
+        }
+        return _map.get(self.verdict, "unknown")
 
     def __str__(self):
         return f"{self.user} - {self.problem} - {self.verdict}"
