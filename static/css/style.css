@@ -4,6 +4,8 @@
    ═══════════════════════════════════════════════════════════ */
 
 /* ── CSS Custom Properties ───────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 :root {
     --bg: #05070d;
     --bg-soft: #080b18;
@@ -44,7 +46,7 @@ body.cs-body {
         radial-gradient(ellipse at 82% 4%, rgba(167, 139, 250, 0.13) 0%, transparent 40%),
         radial-gradient(ellipse at 50% 100%, rgba(56, 232, 255, 0.06) 0%, transparent 55%),
         var(--bg);
-    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-feature-settings: 'cv02','cv03','cv04','cv11';
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -601,7 +603,7 @@ a:hover {
 .page-shell {
     width: min(100%, 1440px);
     margin: 0 auto;
-    padding: 7rem clamp(0.75rem, 1.2vw, 1rem) 3rem;
+    padding: 4.8rem clamp(0.75rem, 1.2vw, 1rem) 3rem;
 }
 
 .content-top,
