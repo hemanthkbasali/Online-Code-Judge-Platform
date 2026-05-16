@@ -79,8 +79,8 @@
         <div class="hm-panel mt-5">
             <!-- Data bridge: heatmap JS reads these attributes -->
             <div id="hm-data"
-                 data-weeks="{{ heatmap_json|escapejs }}"
-                 data-months="{{ heatmap_months_json|escapejs }}"
+                 data-weeks="{{ heatmap_json|escape }}"
+                 data-months="{{ heatmap_months_json|escape }}"
                  hidden></div>
 
             <!-- Panel header -->
