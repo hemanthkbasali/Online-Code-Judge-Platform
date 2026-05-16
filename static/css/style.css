@@ -1875,12 +1875,12 @@ a:hover {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.09em;
-    padding: 0.85rem 1rem;
+    padding: 0.9rem 1rem; /* match body cells for pixel-perfect alignment */
     white-space: nowrap;
     background: rgba(6, 9, 20, 0.5);
 }
 
-.sub-col-status  { width: 15rem; min-width: 13rem; }
+.sub-col-status  { width: 10rem; min-width: 10rem; }
 .sub-col-problem { min-width: 12rem; }
 .sub-col-lang    { width: 8rem; min-width: 7rem; }
 .sub-col-runtime { width: 7.5rem; min-width: 6.5rem; }
@@ -1888,7 +1888,6 @@ a:hover {
 .sub-col-when    { width: 8rem; min-width: 7rem; white-space: nowrap; }
 
 .sub-row {
-    position: relative;
     border-bottom: 1px solid rgba(255, 255, 255, 0.048);
     transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
@@ -1898,41 +1897,35 @@ a:hover {
     vertical-align: middle;
 }
 
+.sub-row td:first-child {
+    box-shadow: inset 2.5px 0 0 transparent;
+    transition: box-shadow 200ms ease;
+}
+
 .sub-row:last-child {
     border-bottom: none;
 }
 
-.sub-row::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 2.5px;
-    opacity: 0;
-    border-radius: 0;
-    transition: opacity 200ms ease;
-}
-
-.sub-row:hover::before { opacity: 1; }
-
 .sub-row--accepted               { background: rgba(74, 222, 128, 0.02); }
-.sub-row--accepted::before       { background: linear-gradient(180deg, var(--cyan), var(--green)); }
 .sub-row--accepted:hover         { background: rgba(74, 222, 128, 0.045); box-shadow: inset 0 0 40px rgba(74, 222, 128, 0.04); }
+.sub-row--accepted:hover td:first-child { box-shadow: inset 2.5px 0 0 var(--green); }
 
-.sub-row--wrong-answer::before       { background: linear-gradient(180deg, var(--red), rgba(248,113,113,0.5)); }
 .sub-row--wrong-answer:hover         { background: rgba(248, 113, 113, 0.04); box-shadow: inset 0 0 40px rgba(248, 113, 113, 0.03); }
+.sub-row--wrong-answer:hover td:first-child { box-shadow: inset 2.5px 0 0 var(--red); }
 
-.sub-row--time-limit-exceeded::before { background: linear-gradient(180deg, var(--amber), rgba(251,191,36,0.5)); }
 .sub-row--time-limit-exceeded:hover   { background: rgba(251, 191, 36, 0.04); box-shadow: inset 0 0 40px rgba(251, 191, 36, 0.03); }
+.sub-row--time-limit-exceeded:hover td:first-child { box-shadow: inset 2.5px 0 0 var(--amber); }
 
-.sub-row--runtime-error::before      { background: linear-gradient(180deg, var(--purple), rgba(167,139,250,0.5)); }
 .sub-row--runtime-error:hover        { background: rgba(167, 139, 250, 0.04); box-shadow: inset 0 0 40px rgba(167, 139, 250, 0.03); }
+.sub-row--runtime-error:hover td:first-child { box-shadow: inset 2.5px 0 0 var(--purple); }
 
-.sub-row--compilation-error::before  { background: linear-gradient(180deg, #fb923c, rgba(251,146,60,0.5)); }
 .sub-row--compilation-error:hover    { background: rgba(251, 146, 60, 0.04); box-shadow: inset 0 0 40px rgba(251, 146, 60, 0.03); }
+.sub-row--compilation-error:hover td:first-child { box-shadow: inset 2.5px 0 0 #fb923c; }
 
 .sub-verdict-wrap {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
 }
 
 .sub-verdict-badge {
