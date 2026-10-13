@@ -50,6 +50,15 @@ def create_temp_workspace():
     return Path(tempfile.mkdtemp(prefix="run_", dir=base))
 
 
+def _as_text(value):
+    """subprocess may attach bytes (or None) to TimeoutExpired even when text=True."""
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value
+
+
 def run_command(command, stdin="", cwd=None, timeout=None):
     """Run a subprocess safely using an argument list and a timeout."""
     started = time.perf_counter()
@@ -74,8 +83,8 @@ def run_command(command, stdin="", cwd=None, timeout=None):
         elapsed = round(time.perf_counter() - started, 4)
         return CommandResult(
             returncode=-1,
-            stdout=exc.stdout or "",
-            stderr=exc.stderr or "Execution timed out.",
+            stdout=_as_text(exc.stdout),
+            stderr=_as_text(exc.stderr) or "Execution timed out.",
             execution_time=elapsed,
             timed_out=True,
         )

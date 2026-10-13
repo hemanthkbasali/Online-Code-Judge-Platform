@@ -1,4 +1,7 @@
+import subprocess
+import sys
 from types import SimpleNamespace
+from unittest import mock
 
 from django.test import SimpleTestCase, override_settings
 
@@ -91,6 +94,31 @@ class RunCommandTests(SimpleTestCase):
         result = run_command(["definitely-not-a-real-binary-xyz"])
         self.assertEqual(result.returncode, 127)
         self.assertIn("not found", result.stderr)
+
+    def test_timeout_returns_text_not_bytes(self):
+        script = "import sys,time; print('partial'); sys.stdout.flush(); time.sleep(10)"
+        result = run_command([sys.executable, "-c", script], timeout=1)
+        self.assertTrue(result.timed_out)
+        self.assertIsInstance(result.stdout, str)
+        self.assertIsInstance(result.stderr, str)
+        self.assertIn("partial", result.stdout)
+
+    def test_timeout_bytes_output_is_decoded(self):
+        # Some platforms/Python versions attach bytes to TimeoutExpired even with text=True.
+        exc = subprocess.TimeoutExpired(
+            ["x"], 1, output=b"partial \xff out", stderr=b"warn"
+        )
+        with mock.patch("judge.utils.subprocess.run", side_effect=exc):
+            result = run_command(["x"], timeout=1)
+        self.assertTrue(result.timed_out)
+        self.assertEqual(result.stdout, "partial � out")
+        self.assertEqual(result.stderr, "warn")
+
+    def test_timeout_without_output_has_default_message(self):
+        result = run_command([sys.executable, "-c", "import time; time.sleep(10)"], timeout=1)
+        self.assertTrue(result.timed_out)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(result.stderr, "Execution timed out.")
 
 
 class PythonJudgeTests(SimpleTestCase):
