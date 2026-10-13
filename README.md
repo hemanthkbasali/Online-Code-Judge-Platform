@@ -63,6 +63,15 @@ Open http://127.0.0.1:8000/.
 3. Pick a problem, write a solution in the editor, choose a language, and submit.
 4. View verdicts in your submission history; join contests from the Contests page.
 
+## Tests
+
+```powershell
+python manage.py check
+python manage.py test
+```
+
+The suite covers output comparison, code validation, the command runner (including timeouts), the Python executor, and verdict evaluation. The tests do not touch the database and do not need the C/C++/Java toolchains. GitHub Actions runs the same two commands on every push and pull request (`.github/workflows/ci.yml`).
+
 ## Project Structure
 
 ```
@@ -80,4 +89,5 @@ codesentinel/  project settings and URLs
 ## Future Improvements
 
 - Run submissions inside containers with restricted users, resource limits, and no network access
-- Automated tests for the judge engine and contest flow
+- Tests for the C, C++ and Java executors (they need compilers available in CI)
+- Tests for the problem, submission and contest views
